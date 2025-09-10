@@ -8,17 +8,18 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "@/lib/store/cart";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import { useParams } from "next/navigation";
+import NotFound from "@/app/not-found";
+import { HiHeart } from "react-icons/hi";
+import Button from "@/components/common/Button";
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
 
-export default function ProductDetails({ params }: PageProps) {
+export default function ProductDetails() {
   const [products, setProducts] = useState<ProductCard[]>([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const {id} = useParams() ; 
+  console.log(id)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,46 +35,22 @@ export default function ProductDetails({ params }: PageProps) {
     fetchData();
   }, []);
 
-  const productId = Array.isArray(params.id) ? params.id[0] : params.id;
-  const currentProduct = products.find(
-    (product: ProductCard) => product.id === Number(productId)
-  );
-
-  const handleAddToCart = () => {
-    if (!currentProduct) {
-      toast.error("Product not found!");
-      return;
-    }
-    
-    const productToAdd: ProductCard = {
-      ...currentProduct,
-      quantity: 1
-    };
-    
-    dispatch(addToCart(productToAdd));
-    toast.success("Product added to cart!");
-  };
+  
+  const productId = Array.isArray(id) ? id[0] : id || '';
+  const currentProduct = productId 
+    ? products.find((product: ProductCard) => product.id === Number(productId))
+    : undefined;
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-700"></div>
       </div>
     );
   }
 
   if (!currentProduct) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Product not found</h1>
-        <Link 
-          href="/products" 
-          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-        >
-          Back to Products
-        </Link>
-      </div>
-    );
+    return (<NotFound />);
   }
 
   return (
@@ -142,39 +119,29 @@ export default function ProductDetails({ params }: PageProps) {
                 </p>
               </div>
 
-              <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                <button
+              <div className="mt-8 flex flex-col  sm:flex-row gap-4">
+                <Button
                   onClick={() => {
                     if (currentProduct) {
                       dispatch(addToCart({ ...currentProduct, quantity: 1 }));
-                      toast.success("Product added to cart!");
+                      toast.success(currentProduct.title + " added to cart");
                     }
                   }}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-md font-medium transition-colors"
-                >
-                  Add to Cart
-                </button>
-                <Link
+                  text="Add to Cart"
+                  variant="primary"
+                />
+                <Button
                   href="/cart"
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-md font-medium text-center transition-colors"
-                >
-                  Buy Now
-                </Link>
+                  text="Buy Now"
+                  variant="primary"
+                  
+                />
               </div>
-
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <h3 className="text-sm font-medium text-gray-900">Product Details</h3>
-                <div className="mt-4 space-y-4">
-                  <div className="flex">
-                    <span className="text-gray-500 w-24">Category</span>
-                    <span className="text-gray-700 capitalize">{currentProduct.category}</span>
-                  </div>
-                  <div className="flex">
-                    <span className="text-gray-500 w-24">In Stock</span>
-                    <span className="text-green-600 font-medium">Available</span>
-                  </div>
-                </div>
+              <div className="flex items-center gap-2 mt-4">
+                <HiHeart className="text-2xl text-red-600"/>
+                <span className="text-gray-600">Wishlist</span>
               </div>
+              
             </div>
           </div>
         </div>

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { showCartItems, removeFromCart, updateQuantity } from "@/lib/store/cart";
 import Image from "next/image";
 import { FaTrash, FaPlus, FaMinus } from "react-icons/fa";
-import Link from "next/link";
+import { toast } from "react-toastify";
 
 export default function CartItems() {
     const dispatch = useDispatch();
@@ -11,34 +11,13 @@ export default function CartItems() {
 
     const handleRemoveItem = (productId: number) => {
         dispatch(removeFromCart(productId));
+        toast.error("Product removed from cart")
     };
 
     const handleQuantityChange = (productId: number, newQuantity: number) => {
         if (newQuantity < 1) return;
         dispatch(updateQuantity({ id: productId, quantity: newQuantity }));
     };
-    
-    if (!cartItems || cartItems.length === 0) {
-        return (
-            <div className="text-center py-12">
-                <div className="mx-auto w-24 h-24 text-gray-300 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                </div>
-                <h3 className="text-lg font-medium text-gray-900">Your cart is empty</h3>
-                <p className="mt-1 text-gray-500">Looks like you haven&apos;t added anything to your cart yet.</p>
-                <div className="mt-6">
-                    <Link
-                        href="/products"
-                        className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Continue Shopping
-                    </Link>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="bg-white">
@@ -68,7 +47,7 @@ export default function CartItems() {
                             <div className="col-span-6 flex">
                                 <div className="flex-shrink-0 h-24 w-24 rounded-md overflow-hidden">
                                     <Image
-                                        src={item.image || '/placeholder-product.png'}
+                                        src={item.image || '/placeholder.webp'}
                                         alt={item.title}
                                         width={96}
                                         height={96}

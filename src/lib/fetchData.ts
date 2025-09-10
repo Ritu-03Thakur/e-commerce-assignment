@@ -1,7 +1,8 @@
 import axios from "axios"
+import { cache } from "react";
 
 
-const fetchProducts = async () => {
+const fetchProducts = cache(async () => {
     try { 
         const response = await axios.get("https://fakestoreapi.com/products") ; 
         return response.data ; 
@@ -10,6 +11,7 @@ const fetchProducts = async () => {
         throw error ;
     }
 
-}
+})
+
 
 export {fetchProducts} ; 

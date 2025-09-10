@@ -1,9 +1,11 @@
-import { FaStar, FaStarHalfAlt, FaRegStar, FaShoppingCart, FaHeart } from "react-icons/fa";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { ProductCard } from "@/types/Product";
 import Image from "next/image";
 import Link from "next/link";
 
+
 export default function Card({ product }: { product: ProductCard }) {
+
     const renderRating = (rating: number) => {
         const stars = [];
         const fullStars = Math.floor(rating);
@@ -26,15 +28,12 @@ export default function Card({ product }: { product: ProductCard }) {
             <div className="relative h-48 w-full bg-gray-100">
                 <Link href={`/products/${product?.id}`}>
                     <Image
-                        src={product?.image || "/placeholder-product.png"}
+                        src={product?.image || "/placeholder.webp"}
                         alt={product?.title || "Product image"}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                 </Link>
-                <button className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors">
-                    <FaHeart className="text-gray-400 hover:text-red-500" />
-                </button>
             </div>
             
             <div className="p-4">
@@ -44,11 +43,13 @@ export default function Card({ product }: { product: ProductCard }) {
                             {product?.title}
                         </h3>
                     </Link>
-                    <span className="text-sm font-medium text-indigo-600">
-                        ${product?.price?.toFixed(2)}
-                    </span>
                 </div>
-                
+                <span className="text-xs px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full">
+                    {product?.category}
+                </span>
+                <p className="text-sm text-gray-500 mb-3 line-clamp-2 h-10">
+                    {product?.description}
+                </p>
                 <div className="flex items-center mb-2">
                     <div className="flex">
                         {product?.rating?.rate ? renderRating(product.rating.rate) : null}
@@ -57,18 +58,10 @@ export default function Card({ product }: { product: ProductCard }) {
                         ({product?.rating?.count || 0})
                     </span>
                 </div>
-                
-                <p className="text-sm text-gray-500 mb-3 line-clamp-2 h-10">
-                    {product?.description}
-                </p>
-                
                 <div className="flex justify-between items-center">
-                    <span className="text-xs px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full">
-                        {product?.category}
+                    <span className="text-xs px-2 py-1 text-indigo-800">
+                        ${product?.price?.toFixed(2)}
                     </span>
-                    <button className="p-2 text-gray-600 hover:text-indigo-600 transition-colors">
-                        <FaShoppingCart />
-                    </button>
                 </div>
             </div>
         </div>

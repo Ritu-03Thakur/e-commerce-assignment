@@ -3,7 +3,8 @@ import Card from "@/components/common/Card";
 import React, { useEffect, useState } from "react";
 import { fetchProducts } from "@/lib/fetchData";
 import { ProductCard } from "@/types/Product";
-import ProductHero from "@/components/products/ProductHero";
+import NotFound from "../not-found";
+import { IoFilter } from "react-icons/io5";
 
 export default function Products() {
     const [products, setProducts] = useState<ProductCard[]>([]);
@@ -28,10 +29,30 @@ export default function Products() {
         fetchData();
     }, []);
 
+   const [sortBy, setSortBy] = useState<string>('price-low');
+   
+   const filteredProducts = React.useMemo(() => {
+     const productsToSort = [...products];
+     switch (sortBy) {
+      case "price-low":
+        return productsToSort.sort((a, b) => a.price - b.price);
+      case "price-high":
+        return productsToSort.sort((a, b) => b.price - a.price);
+      case "highly-rated":
+        return productsToSort.sort((a, b) => b.rating.rate - a.rating.rate);
+      case "atoz":
+        return productsToSort.sort((a, b) => a.title.localeCompare(b.title));
+      case "ztoa":
+        return productsToSort.sort((a, b) => b.title.localeCompare(a.title));
+      default:
+        return productsToSort;
+     }
+   }, [products, sortBy]);
+
+
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50">
-                <ProductHero />
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {[...Array(8)].map((_, index) => (
@@ -56,36 +77,11 @@ export default function Products() {
     }
 
     if (error) {
-        return (
-            <div className="min-h-screen bg-gray-50">
-                <ProductHero />
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-                    <div className="bg-red-50 border-l-4 border-red-400 p-4">
-                        <div className="flex">
-                            <div className="flex-shrink-0">
-                                <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                                </svg>
-                            </div>
-                            <div className="ml-3">
-                                <p className="text-sm text-red-700">{error}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <button
-                        onClick={() => window.location.reload()}
-                        className="mt-6 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Retry
-                    </button>
-                </div>
-            </div>
-        );
+        return (<NotFound/>);
     }
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <ProductHero />
             
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex justify-between items-center mb-8">
@@ -94,17 +90,17 @@ export default function Products() {
                         <div className="relative">
                             <select
                                 className="block appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                                defaultValue="featured"
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
                             >
-                                <option value="featured">Featured</option>
                                 <option value="price-low">Price: Low to High</option>
                                 <option value="price-high">Price: High to Low</option>
-                                <option value="newest">Newest Arrivals</option>
+                                <option value="highly-rated">Highly Rated</option>
+                                <option value="atoz">Name A to Z</option>
+                                <option value="ztoa">Name Z to A</option>
                             </select>
                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                </svg>
+                                <IoFilter />
                             </div>
                         </div>
                     </div>
@@ -120,7 +116,7 @@ export default function Products() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {products.map((product: ProductCard) => (
+                        {filteredProducts.map((product: ProductCard) => (
                             <Card key={product?.id} product={product} />
                         ))}
                     </div>
