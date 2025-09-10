@@ -116,7 +116,7 @@ export default function Products() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <h3 className="mt-2 text-sm font-medium text-gray-900">No products found</h3>
-                        <p className="mt-1 text-sm text-gray-500">We couldn't find any products matching your criteria.</p>
+                        <p className="mt-1 text-sm text-gray-500">We couldn&apos;t find any products matching your criteria.</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -126,14 +126,6 @@ export default function Products() {
                     </div>
                 )}
             </main>
-
-            <footer className="bg-white border-t border-gray-200 mt-12">
-                <div className="max-w-7xl mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
-                    <p className="text-center text-base text-gray-500">
-                        &copy; {new Date().getFullYear()} ShopEase. All rights reserved.
-                    </p>
-                </div>
-            </footer>
         </div>
     );
 }

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { showCartItems, removeFromCart, updateQuantity } from "@/lib/store/cart";
 import Image from "next/image";
 import { FaTrash, FaPlus, FaMinus } from "react-icons/fa";
+import Link from "next/link";
 
 export default function CartItems() {
     const dispatch = useDispatch();
@@ -28,12 +29,12 @@ export default function CartItems() {
                 <h3 className="text-lg font-medium text-gray-900">Your cart is empty</h3>
                 <p className="mt-1 text-gray-500">Looks like you haven&apos;t added anything to your cart yet.</p>
                 <div className="mt-6">
-                    <a
+                    <Link
                         href="/products"
                         className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                         Continue Shopping
-                    </a>
+                    </Link>
                 </div>
             </div>
         );
