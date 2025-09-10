@@ -73,7 +73,7 @@ export default function CartPage() {
                             </svg>
                         </div>
                         <h3 className="text-lg font-medium text-gray-900">Your cart is empty</h3>
-                        <p className="mt-1 text-gray-500">Looks like you haven't added anything to your cart yet.</p>
+                        <p className="mt-1 text-gray-500">Looks like you haven&apos;t added anything to your cart yet.</p>
                         <div className="mt-6">
                             <button
                                 onClick={() => router.push('/products')}

@@ -34,8 +34,9 @@ export default function ProductDetails({ params }: PageProps) {
     fetchData();
   }, []);
 
+  const productId = Array.isArray(params.id) ? params.id[0] : params.id;
   const currentProduct = products.find(
-    (product: ProductCard) => product.id === Number(params.id)
+    (product: ProductCard) => product.id === Number(productId)
   );
 
   const handleAddToCart = () => {
